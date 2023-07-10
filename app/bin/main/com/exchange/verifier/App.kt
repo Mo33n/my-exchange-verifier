@@ -1,4 +1,4 @@
-package com.exchange
+package com.exchange.verifier
 fun main(args: Array<String>) {
     // Sanity check on input
     if (args.isEmpty()) {

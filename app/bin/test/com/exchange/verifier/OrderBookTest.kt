@@ -1,4 +1,4 @@
-package com.exchange
+package com.exchange.verifier
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
