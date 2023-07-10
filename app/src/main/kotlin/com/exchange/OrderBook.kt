@@ -1,12 +1,20 @@
 package com.exchange
 
-class OrderBook {
-    val bids: MutableList<Order> = mutableListOf()
-    val asks: MutableList<Order> = mutableListOf()
+enum class Side(val value: String) {
+    B("BUY"),
+    S("SELL")
+}
 
-    fun processOrder(order: Order): List<Trade> {
-        // println("processing order : ${order}")
-        val trades = mutableListOf<Trade>()
+class OrderBook {
+    val bids: MutableList<OrderDTO> = mutableListOf()
+    val asks: MutableList<OrderDTO> = mutableListOf()
+
+    fun processOrders(orders: List<OrderDTO>): List<TradeDTO> {
+        return orders.flatMap { processOrder(it) }
+    }
+
+    fun processOrder(order: OrderDTO): List<TradeDTO> {
+        val trades = mutableListOf<TradeDTO>()
 
         when (order.side) {
             Side.B -> {
@@ -16,7 +24,7 @@ class OrderBook {
                 // i.e (Trade with the LOWEST priced selling orders first, if found two orders of
                 // same price then trade with earliest order first (lower orderId))
                 val sortedAsks =
-                        matchingAsks.sortedWith(compareBy<Order> { it.price }.thenBy { it.id })
+                        matchingAsks.sortedWith(compareBy<OrderDTO> { it.price }.thenBy { it.id })
                 trades.addAll(processTrades(order, sortedAsks))
             }
             Side.S -> {
@@ -27,7 +35,7 @@ class OrderBook {
                 // same price then trade with earliest order first (lower orderId))
                 val sortedBids =
                         matchingBids.sortedWith(
-                                compareByDescending<Order> { it.price }.thenBy { it.id }
+                                compareByDescending<OrderDTO> { it.price }.thenBy { it.id }
                         )
                 trades.addAll(processTrades(order, sortedBids))
             }
@@ -36,18 +44,16 @@ class OrderBook {
         return trades
     }
 
-    private fun processTrades(order: Order, matchingOrders: List<Order>): List<Trade> {
-        val trades = mutableListOf<Trade>()
+    private fun processTrades(order: OrderDTO, matchingOrders: List<OrderDTO>): List<TradeDTO> {
+        val trades = mutableListOf<TradeDTO>()
         var remainingQuantity = order.quantity
-
-        // println("processTrades: Order: ${order}, matchingOrders: ${matchingOrders}")
 
         for (matchingOrder in matchingOrders) {
             if (remainingQuantity == 0) break
 
             val tradeQuantity = minOf(matchingOrder.quantity, remainingQuantity)
 
-            trades.add(Trade(order.id, matchingOrder.id, matchingOrder.price, tradeQuantity))
+            trades.add(TradeDTO(order.id, matchingOrder.id, matchingOrder.price, tradeQuantity))
             remainingQuantity -= tradeQuantity
             matchingOrder.quantity -= tradeQuantity
 
@@ -63,7 +69,7 @@ class OrderBook {
 
         // ASSUMPTION : We allow partial trade, so have to store remaining order quantity.
         if (remainingQuantity > 0) {
-            val remainingOrder = Order(order.id, order.side, order.price, remainingQuantity)
+            val remainingOrder = OrderDTO(order.id, order.side, order.price, remainingQuantity)
             if (order.side == Side.B) {
                 bids.add(remainingOrder)
             } else {
@@ -82,8 +88,8 @@ class OrderBook {
             var bidLine = String.format("%18s", "")
             var askLine = String.format("%18s", "")
 
-            val bid = bids.sortedWith(compareByDescending(Order::id)).getOrNull(i)
-            val ask = asks.sortedWith(compareBy(Order::id)).getOrNull(i)
+            val bid = bids.sortedWith(compareByDescending(OrderDTO::id)).getOrNull(i)
+            val ask = asks.sortedWith(compareBy(OrderDTO::id)).getOrNull(i)
 
             /**
              * As per requirment and best of understanding, orderbook should be formated based of
