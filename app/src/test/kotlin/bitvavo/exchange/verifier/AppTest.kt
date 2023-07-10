@@ -1,4 +1,4 @@
-package bitvavo.exchange.verifier
+package com.exchange
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,8 +18,8 @@ class OrderBookTest {
         trades.addAll(orderBook.processOrder(Order("6", Side.B, 95, 100)))
 
         assertEquals(trades.size, 2)
-        assertEquals(orderBook.getBidsSize(), 0)
-        assertEquals(orderBook.getAsksSize(), 5)
+        assertEquals(orderBook.bids.size, 0)
+        assertEquals(orderBook.asks.size, 5)
     }
 
     @Test
@@ -34,8 +34,8 @@ class OrderBookTest {
         trades.addAll(orderBook.processOrder(Order("6", Side.S, 103, 100)))
 
         assertEquals(trades.size, 0)
-        assertEquals(orderBook.getBidsSize(), 2)
-        assertEquals(orderBook.getAsksSize(), 4)
+        assertEquals(orderBook.bids.size, 2)
+        assertEquals(orderBook.asks.size, 4)
     }
 
     fun TradeSizeAndBookSizeShouldbeCorrect_test2() {
@@ -49,7 +49,7 @@ class OrderBookTest {
         trades.addAll(orderBook.processOrder(Order("6", Side.S, 103, 100)))
 
         assertEquals(trades.size, 4)
-        assertEquals(orderBook.getBidsSize(), 2)
-        assertEquals(orderBook.getAsksSize(), 1)
+        assertEquals(orderBook.bids.size, 2)
+        assertEquals(orderBook.asks.size, 1)
     }
 }

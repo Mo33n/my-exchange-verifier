@@ -38,6 +38,12 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("bitvavo.exchange.verifier.AppKt")
-    executableDir = "/Users/moeenmohsin/bitvavo/project/app/bin"
+    mainClass.set("com.exchange.AppKt")
 }
+
+// tasks.register<CreateStartScripts>("createStartScripts") {
+//   outputDir = file("build/final")
+//   mainClass = "org.gradle.test.Main"
+//   applicationName = "moeenApp"
+//   classpath = files("/Users/moeenmohsin/bitvavo/project/app/build/classes/kotlin/main/com/exchange")
+// }

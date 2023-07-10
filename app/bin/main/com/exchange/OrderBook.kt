@@ -1,16 +1,8 @@
-package bitvavo.exchange.verifier
+package com.exchange
 
 class OrderBook {
-    private val bids: MutableList<Order> = mutableListOf()
-    private val asks: MutableList<Order> = mutableListOf()
-
-    fun getBidsSize(): Int {
-        return bids.size
-    }
-
-    fun getAsksSize(): Int {
-        return asks.size
-    }
+    val bids: MutableList<Order> = mutableListOf()
+    val asks: MutableList<Order> = mutableListOf()
 
     fun processOrder(order: Order): List<Trade> {
         // println("processing order : ${order}")
@@ -93,13 +85,18 @@ class OrderBook {
             val bid = bids.sortedWith(compareByDescending(Order::id)).getOrNull(i)
             val ask = asks.sortedWith(compareBy(Order::id)).getOrNull(i)
 
+            /**
+             * As per requirment and best of understanding, orderbook should be formated based of
+             * this format: 000,000,000 000000 | 000000 000,000,000. If a value is too small to
+             * cover the whole reserved area, it should be left padded with spaces.
+             */
             if (bid != null) {
                 bidLine =
-                        "${String.format("%,9d", bid.quantity).trim().padStart(11)} ${String.format("%,6d", bid.price).trim().padStart(6)}"
+                        "${String.format("%,-11d", bid.quantity)} ${String.format("%-6d", bid.price)}"
             }
             if (ask != null) {
                 askLine =
-                        "${String.format("%6d", ask.price).trim().padStart(6)} ${String.format("%,9d", ask.quantity).trim().padStart(11)}"
+                        "${String.format("%-6d", ask.price)} ${String.format("%,-11d", ask.quantity)}"
             }
 
             println("$bidLine | $askLine")

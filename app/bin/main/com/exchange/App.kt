@@ -1,7 +1,13 @@
-package bitvavo.exchange.verifier
+package com.exchange
+class App {
+    val greeting: String
+        get() {
+            return "Hello World!"
+        }
+}
 
-fun main(args: Array<String>) {
-
+fun main() {
+    println(App().greeting)
     // println("main arguments  : ${args[0]} ${args[1]}  ${args[2]}")
 
     val orderBook = OrderBook()
@@ -56,9 +62,8 @@ fun main(args: Array<String>) {
             10005,S,105,20000
             10001,S,100,500
             10002,S,100,10000
-            10003,B,99,50000
+            10003,B,99,500
             10004,S,103,100
-            10006,B,105,16000
             """.trimIndent()
 
     // Sorted orders based on orderId
@@ -69,6 +74,8 @@ fun main(args: Array<String>) {
                         Order(id, Side.valueOf(side), price.toInt(), quantity.toInt())
                     }
                     .sortedWith(compareBy(Order::id))
+
+    // TODO : VALIDATION
 
     val trades = mutableListOf<Trade>()
 
