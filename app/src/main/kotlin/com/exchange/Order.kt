@@ -1,4 +1,4 @@
-package com.exchange
+package com.exchange.verifier
 
 data class OrderDTO(val id: String, val side: Side, val price: Int, var quantity: Int)
 

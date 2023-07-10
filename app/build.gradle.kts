@@ -38,13 +38,13 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("com.exchange.AppKt")
+    mainClass.set("com.exchange.verifier.AppKt")
 }
 
 
 tasks {
     val fatJar = register<Jar>("fatJar") {
-        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources")) // We need this for Gradle optimization to work
+        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
         archiveClassifier.set("standalone")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         manifest { attributes(mapOf("Main-Class" to application.mainClass)) } // Provided we set it up in the application plugin configuration

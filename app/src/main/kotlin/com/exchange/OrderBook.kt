@@ -1,4 +1,4 @@
-package com.exchange
+package com.exchange.verifier
 
 enum class Side(val value: String) {
     B("BUY"),

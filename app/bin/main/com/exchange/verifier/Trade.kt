@@ -1,4 +1,4 @@
-package com.exchange.verifier
+package com.exchange
 
 data class TradeDTO(
         val aggressorId: String,
